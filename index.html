@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="color-scheme" content="light"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Strategy Planning Cockpit</title>
+<style>
+:root{--navy:#10323a;--acc:#c0792a;--ink:#1c2430;--mute:#5b6675;--line:#e1e4e8;--card:#fff;--bg:#f6f7f8;--red:#b3362f;--green:#2f7a4b;--amber:#c7851a;--lt:#9fb8bd}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Helvetica Neue",Arial,sans-serif;font-size:14px;line-height:1.45}
+.top{background:#fff;color:var(--navy);border-bottom:3px solid var(--acc);padding:14px 22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.top h1{margin:0;font-size:18px}.top small{color:var(--acc);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;display:block}
+.badge{background:var(--navy);color:#fff;font-weight:700;font-size:11px;padding:4px 9px;border-radius:20px}
+.disc{background:#fff4d6;color:#6b4e00;font-size:12px;padding:7px 22px;border-bottom:1px solid #ecd9a0}
+nav{display:flex;gap:4px;padding:10px 22px 0;flex-wrap:wrap}
+nav button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 13px;border-radius:7px 7px 0 0;cursor:pointer;font-size:13px}
+nav button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+main{padding:16px 22px 40px;max-width:1280px;margin:0 auto}
+.tab{display:none}.tab.on{display:block}
+.grid{display:grid;gap:12px}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:1fr 1fr}
+@media (max-width:860px){.g4,.g3,.g2,.ctrl{grid-template-columns:1fr!important}main,nav{padding-left:16px;padding-right:16px}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto}
+.card h3{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--navy)}
+.tile .v{font-size:24px;font-weight:700;color:var(--navy)}.tile .l{font-size:12px;color:var(--mute)}.tile .d{font-size:12px;margin-top:3px}
+.neg{color:var(--red)}.pos{color:var(--green)}.amb{color:var(--amber)}
+table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;font-weight:600;color:var(--mute);border-bottom:2px solid var(--line);padding:6px}
+td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.tot td{font-weight:700;border-top:2px solid var(--line)}
+.pill{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap}
+.p-g{background:#dff1e5;color:#1f6b3d}.p-a{background:#fcecd0;color:#8a5a00}.p-r{background:#f8dcda;color:#8f2621}.p-n{background:#e6ecee;color:#34505a}
+.comm li{margin:4px 0}
+.ctrl{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+label{font-size:12px;color:var(--mute);display:block}input[type=range]{width:100%;accent-color:#c0792a}
+.out{font-weight:700;color:var(--navy)}
+svg text{fill:var(--mute);font-size:11px}
+.foot{font-size:11px;color:var(--mute);margin-top:14px}
+.legend span{display:inline-flex;align-items:center;gap:5px;margin-right:12px;font-size:12px;color:var(--mute)}.legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+button.ld{border:1px solid var(--navy);background:#fff;color:var(--navy);border-radius:5px;padding:2px 8px;font-size:11px;cursor:pointer}
+</style></head><body>
+<div class="top"><div><small>Candidate prototype · Strategy, Planning &amp; Analytics</small><h1>Strategy &amp; Planning Cockpit — Wholesale Data Center Platform</h1></div><span class="badge">Illustrative · Oct 2026</span></div>
+<div class="disc"><b>Illustrative data.</b> Built by Swarup Kumar Mohanty to show approach. Project names, MW and target dates marked "public" come from press releases and trade press; every price, cost, utilisation, plan, actual, status and financial figure is invented for demonstration. Not Khazna data and not a Khazna product.</div>
+<nav id="nav"></nav>
+<main>
+
+<section class="tab" id="t-board">
+<div class="grid g4" id="bTiles"></div>
+<div class="grid g2" style="margin-top:12px">
+<div class="card"><h3>What changed this month — for ExCo / Board</h3><ul class="comm">
+<li><b>Capacity energised YTD is 71% of plan.</b> Two sites moved right by a quarter; the cause is grid connection and long-lead equipment, not demand.</li>
+<li><b>Contracted MW is ahead of plan (+6%).</b> The gap between contracted and billing MW is the number to watch: revenue follows energisation.</li>
+<li><b>FY revenue forecast −7% vs plan</b>, almost entirely timing. Every month of delay on the pipeline costs about the amount shown in the Scenario tab.</li>
+<li><b>Decisions needed:</b> re-sequence fit-out at the two delayed sites; confirm pricing floor for the next pre-lease; approve the standard business-case template.</li></ul></div>
+<div class="card"><h3>Plan → forecast bridge, FY revenue (USD m)</h3><div id="bridge"></div></div>
+</div>
+<div class="grid g2" style="margin-top:12px">
+<div class="card"><h3>Live capacity — plan vs actual / forecast (MW, cumulative)</h3><div class="legend"><span><i style="background:#10323a"></i>Actual</span><span><i style="background:#c0792a"></i>Plan</span><span><i style="background:#9fb8bd"></i>Forecast</span></div><div id="capLine"></div></div>
+<div class="card"><h3>Strategic scorecard</h3><table id="score"></table></div>
+</div>
+</section>
+
+<section class="tab" id="t-scn">
+<div class="card"><h3>Portfolio scenario — delivery timing, take-up and price</h3>
+<div class="ctrl">
+<div><label>Pipeline delay: <span class="out" id="o-dl"></span></label><input type="range" id="dl" min="0" max="18" step="3" value="0"></div>
+<div><label>Take-up of live capacity: <span class="out" id="o-tu"></span></label><input type="range" id="tu" min="60" max="100" step="5" value="90"></div>
+<div><label>Blended price, USD / kW / month: <span class="out" id="o-pr"></span></label><input type="range" id="pr" min="90" max="220" step="5" value="140"></div>
+<div><label>EBITDA margin: <span class="out" id="o-mg"></span></label><input type="range" id="mg" min="40" max="75" step="1" value="60"></div>
+</div>
+<div class="grid g4" style="margin-top:14px" id="sTiles"></div></div>
+<div class="grid g2" style="margin-top:12px">
+<div class="card"><h3>Live MW at year-end — your scenario vs announced timing</h3><div class="legend"><span><i style="background:#10323a"></i>Your scenario</span><span><i style="background:#9fb8bd"></i>Announced timing</span></div><div id="sBars"></div></div>
+<div class="card"><h3>Year by year</h3><table id="sTbl"></table></div>
+</div>
+<div class="card" style="margin-top:12px"><h3>Pipeline behind the model</h3><table id="pipe"></table>
+<p class="foot">Base: ~650 MW live across 30 data centers (company-stated, Dec 2025). "Public" dates are as announced; "assumed" dates are placeholders I chose so the model runs — they are not company guidance. Overlap between announcements (for example the Microsoft–G42 200 MW expansion) is not modelled.</p></div>
+</section>
+
+<section class="tab" id="t-bc">
+<div class="card"><h3>Business case engine — one template, every project</h3>
+<div class="ctrl">
+<div><label>IT capacity: <span class="out" id="o-mw"></span></label><input type="range" id="mw" min="20" max="500" step="10" value="100"></div>
+<div><label>Capex, USD m per MW: <span class="out" id="o-cx"></span></label><input type="range" id="cx" min="6" max="16" step="0.5" value="10"></div>
+<div><label>Price, USD / kW / month: <span class="out" id="o-bp"></span></label><input type="range" id="bp" min="90" max="240" step="5" value="165"></div>
+<div><label>Stabilised occupancy: <span class="out" id="o-oc"></span></label><input type="range" id="oc" min="60" max="100" step="5" value="95"></div>
+<div><label>Lease-up period: <span class="out" id="o-lu"></span></label><input type="range" id="lu" min="0" max="5" step="0.5" value="2"></div>
+<div><label>EBITDA margin: <span class="out" id="o-bm"></span></label><input type="range" id="bm" min="40" max="75" step="1" value="65"></div>
+<div><label>Delay to ready-for-service: <span class="out" id="o-bd"></span></label><input type="range" id="bd" min="0" max="24" step="3" value="0"></div>
+<div><label>Discount rate: <span class="out" id="o-wc"></span></label><input type="range" id="wc" min="6" max="14" step="0.5" value="9"></div>
+</div>
+<div class="grid g4" style="margin-top:14px" id="cTiles"></div></div>
+<div class="grid g2" style="margin-top:12px">
+<div class="card"><h3>Cumulative cash flow (USD m)</h3><div id="cLine"></div></div>
+<div class="card"><h3>NPV sensitivity — each driver moved on its own (USD m)</h3><div id="torn"></div></div>
+</div>
+<div class="card" style="margin-top:12px"><h3>Comparability — three illustrative cases on the same framework</h3><table id="cmp"></table>
+<p class="foot">Method: capex 60% in year 0 and 40% in year 1; ready for service after year 1 plus any delay; occupancy ramps in a straight line over the lease-up period; price escalates 2% a year; 20-year horizon, no terminal value; pre-tax, unlevered. Simplified on purpose — a production model adds power pass-through, phasing by hall, financing, tax and terminal value.</p></div>
+</section>
+
+<section class="tab" id="t-pva">
+<div class="grid g4" id="pTiles"></div>
+<div class="card" style="margin-top:12px"><h3>Performance against plan — YTD</h3><table id="pva"></table>
+<p class="foot">RAG: green within 3% of plan, amber 3–10% adverse, red over 10% adverse.</p></div>
+<div class="grid g2" style="margin-top:12px">
+<div class="card"><h3>Why the forecast moved — reasons, owners, dates</h3><table id="mov"></table></div>
+<div class="card"><h3>Planning cycle governance</h3><table id="cyc"></table></div>
+</div>
+</section>
+
+<section class="tab" id="t-mkt">
+<div class="card"><h3>Market and competitor tracker (from public sources)</h3><table id="mkt"></table></div>
+<div class="grid g2" style="margin-top:12px">
+<div class="card"><h3>Regulatory and policy watch</h3><table id="reg"></table></div>
+<div class="card"><h3>Demand gates — what turns announced MW into usable MW</h3><table id="gate"></table></div>
+</div>
+</section>
+
+<section class="tab" id="t-gov">
+<div class="grid g4" id="gTiles"></div>
+<div class="grid g2" style="margin-top:12px">
+<div class="card"><h3>Strategic initiative tracker</h3><table id="ini"></table></div>
+<div class="card"><h3>Metric dictionary — one definition per number</h3><table id="dict"></table></div>
+</div>
+<div class="card" style="margin-top:12px"><h3>Data-quality checks on the planning dataset</h3><table id="dq"></table></div>
+</section>
+
+<p class="foot">Prototype by Swarup Kumar Mohanty · single HTML file, no external dependencies · In production this sits on a governed dataset fed from finance, commercial, delivery and operations systems, with every number traceable to source and an Excel model kept in step with it.</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const NS='http://www.w3.org/2000/svg';
+const fm=(x,d=0)=>(x<0?'−':'')+Math.abs(x).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+function svg(w,h){const s=document.createElementNS(NS,'svg');s.setAttribute('viewBox',`0 0 ${w} ${h}`);s.setAttribute('width','100%');return s}
+function el(tag,a,p,txt){const e=document.createElementNS(NS,tag);for(const k in a)e.setAttribute(k,a[k]);if(txt!==undefined)e.textContent=txt;p.appendChild(e);return e}
+function tbl(id,head,rows,num=[]){$(id).innerHTML='<tr>'+head.map((h,i)=>`<th class="${num.includes(i)?'n':''}">${h}</th>`).join('')+'</tr>'+rows.map(r=>`<tr class="${r._c||''}">`+r.map((c,i)=>`<td class="${num.includes(i)?'n':''}">${c}</td>`).join('')+'</tr>').join('')}
+const pill=(s,t)=>({G:`<span class="pill p-g">${t||'On track'}</span>`,A:`<span class="pill p-a">${t||'Watch'}</span>`,R:`<span class="pill p-r">${t||'Off track'}</span>`,N:`<span class="pill p-n">${t||'—'}</span>`}[s]);
+function tiles(id,arr){$(id).innerHTML=arr.map(t=>`<div class="card tile"><div class="l">${t[0]}</div><div class="v">${t[1]}</div><div class="d ${t[3]||''}">${t[2]}</div></div>`).join('')}
+
+const TABS=[['board','Board summary'],['scn','Portfolio scenarios'],['bc','Business case engine'],['pva','Plan vs actual'],['mkt','Market & policy'],['gov','Initiatives & definitions']];
+$('nav').innerHTML=TABS.map(t=>`<button data-t="${t[0]}">${t[1]}</button>`).join('');
+function show(t){document.querySelectorAll('.tab').forEach(s=>s.classList.toggle('on',s.id==='t-'+t));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t))}
+$('nav').onclick=e=>{if(e.target.dataset.t)show(e.target.dataset.t)};show('board');
+
+// ---------- BOARD
+tiles('bTiles',[['Live capacity','742 MW','plan 780 · −5%','amb'],['Contracted (signed) MW','1,060 MW','plan 1,000 · +6%','pos'],['Billing utilisation of live MW','88%','plan 90%','amb'],['FY revenue forecast','USD 1,005m','plan 1,080m · −7%','neg']]);
+(function(){const d=[['Plan',1080,'t'],['Delivery timing',-62],['Take-up ramp',-21],['Price / mix',14],['Power pass-thru',-9],['Other',3],['Forecast',1005,'t']];
+const W=560,H=240,P=10,bw=(W-P)/d.length,lo=900,sc=v=>H-30-(v-lo)*(H-55)/200;const s=svg(W,H);let run=0;
+d.forEach((r,i)=>{const x=P+i*bw+6,w=bw-12;let y0,y1,c;if(r[2]){y0=lo;y1=r[1];run=r[1];c=i?'#9fb8bd':'#10323a'}else{y0=run;y1=run+r[1];run=y1;c=r[1]<0?'#b3362f':'#2f7a4b'}
+el('rect',{x,y:sc(Math.max(y0,y1)),width:w,height:Math.max(1,Math.abs(sc(y0)-sc(y1))),fill:c,rx:2},s);
+el('text',{x:x+w/2,y:sc(Math.max(y0,y1))-4,'text-anchor':'middle',style:'font-weight:700;fill:#1c2430'},s,r[2]?fm(r[1]):(r[1]>0?'+':'')+fm(r[1]));
+el('text',{x:x+w/2,y:H-8,'text-anchor':'middle',style:'font-size:9.5px'},s,r[0])});
+$('bridge').appendChild(s);})();
+(function(){const m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const plan=[650,650,665,665,680,700,720,750,780,860,900,1010],act=[650,650,650,665,665,680,680,712,742],fc=[null,null,null,null,null,null,null,null,742,772,842,942];
+const W=560,H=220,P=38,sx=i=>P+i*((W-P-10)/11),sy=v=>H-25-(v-600)*(H-45)/450;const s=svg(W,H);
+[600,700,800,900,1000].forEach(v=>{el('line',{x1:P,x2:W-10,y1:sy(v),y2:sy(v),stroke:'#e1e4e8'},s);el('text',{x:4,y:sy(v)+4},s,v)});
+const path=(a,c,dash)=>{let d='';a.forEach((v,i)=>{if(v==null)return;d+=(d?'L':'M')+sx(i)+','+sy(v)});el('path',{d,fill:'none',stroke:c,'stroke-width':2.5,'stroke-dasharray':dash||''},s)};
+path(plan,'#c0792a','5 4');path(fc,'#9fb8bd','3 3');path(act,'#10323a');act.forEach((v,i)=>el('circle',{cx:sx(i),cy:sy(v),r:3,fill:'#10323a'},s));
+m.forEach((t,i)=>el('text',{x:sx(i),y:H-6,'text-anchor':'middle'},s,t));$('capLine').appendChild(s);})();
+tbl('score',['KPI','Actual','Plan','Status'],[['MW energised YTD','92','130',pill('R')],['Pre-leased share of pipeline','64%','60%',pill('G')],['Average months, contract to billing','7.4','6.0',pill('A')],['Revenue per live MW (USD m, ann.)','1.42','1.45',pill('G')],['Portfolio PUE','1.38','1.35',pill('A')],['Business cases on standard template','5 / 9','9 / 9',pill('A')],['Board pack delivered','WD+7','WD+5',pill('A')]],[1,2]);
+
+// ---------- SCENARIO
+const BASE=650;
+const PIPE=[['Stargate UAE — phase 1 (Abu Dhabi)',200,2026.75,'public','Q3 2026 target'],['AUH8 — Masdar City',30,2026.67,'public','Aug 2026 target'],['AUH4 — Mafraq',30,2027.0,'public','late Dec 2026 target'],['QAJ1 — Ajman (100 MW IT, initial phase)',100,2027.0,'public','initial phase Dec 2026'],['Stargate UAE — remaining phases to 1 GW',800,2028.8,'public','~3 years from Oct 2025'],['Dammam, Saudi Arabia (up to 200 MW)',200,2028.5,'assumed','date not announced'],['Ankara, Turkey',100,2028.5,'assumed','date not announced'],['Ferrera Erbognone, Italy — with Eni',500,2029.5,'assumed','date not announced']];
+const YRS=[2026,2027,2028,2029,2030];
+function live(y,delay){return BASE+PIPE.reduce((a,p)=>a+(p[2]+delay/12<=y+1?p[1]:0),0)}
+function runS(){const dl=+$('dl').value,tu=+$('tu').value/100,pr=+$('pr').value,mg=+$('mg').value/100;
+$('o-dl').textContent=dl+' months';$('o-tu').textContent=(tu*100)+'%';$('o-pr').textContent='$'+pr;$('o-mg').textContent=(mg*100).toFixed(0)+'%';
+const rows=[];let cum=0,cum0=0;
+YRS.forEach(y=>{const rev=avgLive(y,dl)*1000*pr*12*tu/1e6,rev0=avgLive(y,0)*1000*pr*12*tu/1e6;cum+=rev;cum0+=rev0;rows.push([y,live(y,dl),live(y,0),rev,rev*mg,rev-rev0])});
+const L=rows[rows.length-1];
+tiles('sTiles',[['Live MW, end 2030',fm(L[1]),L[1]<L[2]?fm(L[1]-L[2])+' MW vs announced timing':(dl?'same end point, delivered later':'as announced'),L[1]<L[2]?'neg':''],['Revenue 2026–2030','USD '+fm(cum/1000,1)+'bn',dl?fm((cum-cum0))+'m vs announced timing':'at $'+pr+'/kW, '+(tu*100)+'% take-up',dl?'neg':''],['EBITDA 2026–2030','USD '+fm(cum*mg/1000,1)+'bn','at '+(mg*100).toFixed(0)+'% margin',''],['Cost of one month of delay','USD '+fm(Math.abs(revAt(1,tu,pr)-cum0))+'m','5-year revenue, this price and take-up','neg']]);
+tbl('sTbl',['Year','Live MW (scenario)','Live MW (announced)','Revenue USD m','EBITDA USD m','Revenue vs announced'],rows.map(r=>[r[0],fm(r[1]),fm(r[2]),fm(r[3]),fm(r[4]),`<span class="${r[5]<0?'neg':''}">${fm(r[5])}</span>`]),[1,2,3,4,5]);
+const W=560,H=230,P=40,s=svg(W,H),bw=(W-P)/5,sy=v=>H-25-v*(H-50)/2800;
+[0,1000,2000].forEach(v=>{el('line',{x1:P,x2:W,y1:sy(v),y2:sy(v),stroke:'#e1e4e8'},s);el('text',{x:2,y:sy(v)+4},s,v)});
+rows.forEach((r,i)=>{const x=P+i*bw+10,w=(bw-26)/2;el('rect',{x,y:sy(r[1]),width:w,height:H-25-sy(r[1]),fill:'#10323a',rx:2},s);el('rect',{x:x+w+4,y:sy(r[2]),width:w,height:H-25-sy(r[2]),fill:'#9fb8bd',rx:2},s);
+el('text',{x:x+w/2,y:sy(r[1])-4,'text-anchor':'middle',style:'font-weight:700;fill:#1c2430'},s,fm(r[1]));el('text',{x:x+w,y:H-7,'text-anchor':'middle'},s,r[0])});
+$('sBars').innerHTML='';$('sBars').appendChild(s)}
+function avgLive(y,delay){return BASE+PIPE.reduce((a,p)=>a+p[1]*Math.max(0,Math.min(1,y+1-(p[2]+delay/12))),0)}
+function revAt(delay,tu,pr){return YRS.reduce((c,y)=>c+avgLive(y,delay)*1000*pr*12*tu/1e6,0)}
+tbl('pipe',['Project','MW','Target','Date basis','Note'],PIPE.map(p=>[p[0],fm(p[1]),p[2]%1===0?'end '+(p[2]-1):(Math.floor(p[2])+' '+['Q1','Q2','Q3','Q4'][Math.min(3,Math.floor((p[2]%1)*4))]),p[3]==='public'?pill('G','public'):pill('A','assumed'),p[4]]),[1]);
+['dl','tu','pr','mg'].forEach(i=>$(i).oninput=runS);
+
+// ---------- BUSINESS CASE
+function flows(a){const cf=[],N=20;const cap=a.mw*a.cx;for(let t=0;t<=N;t++){let c=0;if(t===0)c-=cap*.6;if(t===1)c-=cap*.4;
+if(t>=1){const age=(t-.5)-(1+a.bd/12);const occ=age<=0?0:a.oc*(a.lu>0?Math.min(1,age/a.lu):1);const rev=a.mw*1000*a.bp*12*occ*Math.pow(1.02,t-1)/1e6;c+=rev*a.bm}cf.push(c)}return cf}
+const npv=(cf,r)=>cf.reduce((s,c,t)=>s+c/Math.pow(1+r,t),0);
+function irr(cf){let lo=-.9,hi=1;if(npv(cf,lo)<0)return null;if(npv(cf,hi)>0)return null;for(let i=0;i<80;i++){const m=(lo+hi)/2;npv(cf,m)>0?lo=m:hi=m}return (lo+hi)/2}
+function payback(cf){let c=0;for(let t=0;t<cf.length;t++){const p=c;c+=cf[t];if(c>=0&&t>0)return t-1+(-p)/cf[t]}return null}
+function getA(){return{mw:+$('mw').value,cx:+$('cx').value,bp:+$('bp').value,oc:+$('oc').value/100,lu:+$('lu').value,bm:+$('bm').value/100,bd:+$('bd').value,wc:+$('wc').value/100}}
+function metrics(a){const cf=flows(a);return{cf,npv:npv(cf,a.wc),irr:irr(cf),pb:payback(cf),cap:a.mw*a.cx}}
+const pc=x=>x==null?'n/a':(x*100).toFixed(1)+'%';
+function runC(){const a=getA();
+$('o-mw').textContent=a.mw+' MW';$('o-cx').textContent='$'+a.cx.toFixed(1)+'m';$('o-bp').textContent='$'+a.bp;$('o-oc').textContent=(a.oc*100)+'%';$('o-lu').textContent=a.lu+' years';$('o-bm').textContent=(a.bm*100).toFixed(0)+'%';$('o-bd').textContent=a.bd+' months';$('o-wc').textContent=(a.wc*100).toFixed(1)+'%';
+const m=metrics(a);
+tiles('cTiles',[['NPV at '+(a.wc*100).toFixed(1)+'%','USD '+fm(m.npv)+'m','capex USD '+fm(m.cap)+'m',m.npv<0?'neg':'pos'],['IRR (pre-tax, unlevered)',pc(m.irr),m.irr!=null?((m.irr-a.wc)*100>=0?'+':'−')+Math.abs((m.irr-a.wc)*100).toFixed(1)+' pts vs discount rate':'',m.irr!=null&&m.irr<a.wc?'neg':'pos'],['Payback',m.pb==null?'beyond 20 yrs':m.pb.toFixed(1)+' years','from first capex',''],['NPV lost per 6 months of delay','USD '+fm(metrics({...a,bd:a.bd+6}).npv-m.npv)+'m','same price and occupancy','neg']]);
+// cumulative line
+(function(){const W=560,H=230,P=46,s=svg(W,H);let c=0;const cum=m.cf.map(v=>c+=v);const mx=Math.max(...cum,0),mn=Math.min(...cum,0),sy=v=>H-25-(v-mn)*(H-45)/((mx-mn)||1),sx=t=>P+t*((W-P-10)/20);
+[mn,0,mx].forEach(v=>{el('line',{x1:P,x2:W-10,y1:sy(v),y2:sy(v),stroke:v===0?'#9aa4b2':'#e1e4e8'},s);el('text',{x:2,y:sy(v)+4},s,fm(v))});
+let d='';cum.forEach((v,t)=>d+=(t?'L':'M')+sx(t)+','+sy(v));el('path',{d,fill:'none',stroke:'#10323a','stroke-width':2.5},s);
+[0,5,10,15,20].forEach(t=>el('text',{x:sx(t),y:H-6,'text-anchor':t==20?'end':'middle'},s,'Yr '+t));
+if(m.pb!=null){el('circle',{cx:sx(m.pb),cy:sy(0),r:5,fill:'#c0792a'},s);el('text',{x:sx(m.pb)+8,y:sy(0)-8,style:'font-weight:700;fill:#1c2430'},s,'payback '+m.pb.toFixed(1)+'y')}
+$('cLine').innerHTML='';$('cLine').appendChild(s)})();
+// tornado
+(function(){const D=[['Price ±10%',{bp:a.bp*.9},{bp:a.bp*1.1}],['Capex per MW ±10%',{cx:a.cx*1.1},{cx:a.cx*.9}],['EBITDA margin ±5 pts',{bm:a.bm-.05},{bm:a.bm+.05}],['Occupancy −10 / +5 pts',{oc:a.oc-.1},{oc:Math.min(1,a.oc+.05)}],['Lease-up +1 / −1 year',{lu:a.lu+1},{lu:Math.max(0,a.lu-1)}],['Delay +6 months / none',{bd:a.bd+6},{bd:0}],['Discount rate ±1 pt',{wc:a.wc+.01},{wc:a.wc-.01}]]
+.map(r=>[r[0],metrics({...a,...r[1]}).npv-m.npv,metrics({...a,...r[2]}).npv-m.npv]).sort((x,y)=>(Math.abs(y[1])+Math.abs(y[2]))-(Math.abs(x[1])+Math.abs(x[2])));
+const W=560,H=230,P=150,s=svg(W,H),mx=Math.max(1,...D.map(r=>Math.max(Math.abs(r[1]),Math.abs(r[2])))),mid=P+(W-P-50)/2+20,k=((W-P-50)/2-25)/mx;
+el('line',{x1:mid,x2:mid,y1:4,y2:H-8,stroke:'#9aa4b2'},s);
+D.forEach((r,i)=>{const y=8+i*31;el('text',{x:0,y:y+14,style:'font-size:11.5px'},s,r[0]);
+[[r[1],'#b3362f'],[r[2],'#2f7a4b']].forEach(([v,c])=>{const w=Math.abs(v)*k,x=v<0?mid-w:mid;el('rect',{x,y,width:Math.max(w,.5),height:20,fill:c,rx:2},s);el('text',{x:v<0?x-4:x+w+4,y:y+14,'text-anchor':v<0?'end':'start',style:'font-size:10px'},s,(v>0?'+':'')+fm(v))})});
+$('torn').innerHTML='';$('torn').appendChild(s)})();
+}
+const CASES=[['A · Pre-leased AI phase, home market',{mw:200,cx:11,bp:185,oc:100,lu:0.5,bm:66,bd:0,wc:9}],['B · New-market campus, phased lease-up',{mw:200,cx:10,bp:180,oc:90,lu:2,bm:63,bd:3,wc:9.5}],['C · Large JV campus, long lead time',{mw:500,cx:11.5,bp:170,oc:90,lu:4,bm:60,bd:9,wc:8.5}]];
+function cmp(){const rs=CASES.map((c,i)=>{const a={...c[1],oc:c[1].oc/100,bm:c[1].bm/100,wc:c[1].wc/100};const m=metrics(a);return{i,n:c[0],a,m}});
+const rk=[...rs].sort((x,y)=>y.m.npv/y.m.cap-x.m.npv/x.m.cap).map(r=>r.i);
+tbl('cmp',['Case','MW','Capex USD m','Price $/kW/mo','Lease-up','Discount rate','NPV USD m','IRR','Payback','NPV per $ of capex','Rank',''],rs.map(r=>[r.n,r.a.mw,fm(r.m.cap),r.a.bp,r.a.lu+'y',pc(r.a.wc),`<span class="${r.m.npv<0?'neg':'pos'}">${fm(r.m.npv)}</span>`,pc(r.m.irr),r.m.pb?r.m.pb.toFixed(1)+'y':'—',(r.m.npv/r.m.cap).toFixed(2),rk.indexOf(r.i)+1,`<button class="ld" data-c="${r.i}">Load</button>`]),[1,2,3,6,7,8,9,10])}
+$('cmp').onclick=e=>{const i=e.target.dataset.c;if(i===undefined)return;const a=CASES[i][1];for(const k in a)$(k).value=a[k];runC();window.scrollTo({top:0,behavior:'smooth'})};
+['mw','cx','bp','oc','lu','bm','bd','wc'].forEach(i=>$(i).oninput=runC);
+
+// ---------- PLAN VS ACTUAL
+tiles('pTiles',[['Revenue YTD','USD 706m','plan 742m · −5%','amb'],['EBITDA YTD','USD 421m','plan 452m · −7%','amb'],['Capex YTD','USD 2.31bn','plan 2.60bn · −11% (timing)','amb'],['Forecast accuracy, last 3 months','94%','target 95%','']]);
+const rag=(a,p,inv)=>{const v=(a-p)/Math.abs(p)*100*(inv?-1:1);return v>=-3?'G':v>=-10?'A':'R'};
+const PVA=[['Live MW (period end)',742,780],['Billing MW',653,702],['Contracted MW',1060,1000],['Revenue, USD m',706,742],['Power and direct costs, USD m',171,168,1],['Operating costs, USD m',114,122,1],['EBITDA, USD m',421,452],['Capex, USD m',2310,2600,1]];
+tbl('pva',['Line','YTD actual','YTD plan','Variance','Var %','RAG'],PVA.map(r=>{const v=r[1]-r[2],good=r[3]?v<=0:v>=0;return[r[0],fm(r[1]),fm(r[2]),`<span class="${good?'pos':'neg'}">${fm(v)}</span>`,`<span class="${good?'pos':'neg'}">${(v>0?'+':'−')+Math.abs(v/r[2]*100).toFixed(0)}%</span>`,r[0].startsWith('Capex')?pill('A','Timing'):pill(rag(r[1],r[2],r[3]))]}),[1,2,3,4]);
+tbl('mov',['Movement','FY revenue','Reason class','Owner','Next step · date'],[['Site A energisation Q3 → Q4','−38','Delivery: grid connection','Delivery','Utility date confirmed · 15 Oct'],['Site B halls 3–4 slip 6 weeks','−24','Delivery: long-lead equipment','Procurement','Expedite plan · 10 Oct'],['Customer X ramp slower than contract','−21','Take-up: customer fit-out','Commercial','Minimum-commit review · 20 Oct'],['New AI-density pricing on Hall 7','+14','Price / mix','Commercial','Apply to next pre-lease'],['Power tariff assumption update','−9','Assumption change','Finance','Lock in FY27 budget'],['Other','+3','—','Strategy','—']],[1]);
+tbl('cyc',['Milestone','Due','Status'],[['Assumptions book issued (demand, price, power, capex/MW, FX)','1 Sep',pill('G','Done')],['Functional inputs: commercial, delivery, operations','25 Sep',pill('A','2 late')],['Consolidation and scenario runs','9 Oct',pill('N','In progress')],['Challenge sessions with function heads','12–23 Oct',pill('N')],['Reconcile to Finance forecast','30 Oct',pill('N')],['ExCo review','10 Nov',pill('N')],['Board strategy review','Dec',pill('N')]]);
+
+// ---------- MARKET
+tbl('mkt',['Signal','What is public','Why it matters to the plan','Source'],[
+['Middle East third-party capacity','~500 MW operational in 2026 → ~1.5 GW by 2030; market ~USD 19.9bn by 2030','Sets the share ceiling and how fast supply catches demand','Data Centre World ME'],
+['Stargate UAE','1 GW cluster inside a 5 GW UAE–US AI campus; first 200 MW targeted Q3 2026','Largest single driver of the delivery plan','The National; G42'],
+['Microsoft – G42','200 MW UAE expansion via Khazna, before end 2026; Microsoft UAE commitment USD 15.2bn','Anchor hyperscale demand and concentration','DCD'],
+['HUMAIN (Saudi Arabia)','~100 MW each in Riyadh and Dammam; target ~6 GW by 2034','Direct competitor for Saudi demand, power and chips','Data Centre World ME'],
+['Khazna in Saudi Arabia','225,000 sqm in Dammam, up to 200 MW; country head appointed Dec 2025','First build outside the UAE at scale','Khazna press release'],
+['Khazna in Europe','500 MW campus at Ferrera Erbognone with Eni, gas power with CO₂ capture','Different power model and regulatory regime','Eni press release'],
+['AI rack density','100 kW+ per rack vs 5–10 kW traditional','Changes capex per MW, cooling and pricing unit','Data Centre World ME']]);
+tbl('reg',['Development','Impact to assess','Status'],[['US export approvals for advanced GPUs (up to 35,000 Blackwell chips authorised for the UAE)','Customer ramp timing; revenue recognition dates',pill('A','Monitor')],['Saudi PDPL — cross-border access treated as transfer','In-kingdom capacity demand; Dammam sizing',pill('N','Model')],['UAE Federal Decree-Law 45/2021 (data protection)','Sovereign-workload demand in UAE',pill('N','Model')],['Grid interconnection lead times','Energisation dates across the pipeline',pill('R','Critical')],['Water use — GCC forecast 426bn litres a year by 2030','Cooling design, opex, permitting',pill('A','Monitor')]]);
+tbl('gate',['Gate','Question the plan must answer','Leading indicator'],[['Power','Is grid capacity confirmed for each phase, by date?','MW with signed utility agreement / MW in plan'],['Chips','Does the customer have allocation for the hall?','Customer GPU delivery date vs ready-for-service'],['Contract','Is the phase pre-leased, and on what take-or-pay terms?','Pre-leased share of pipeline'],['Delivery','Is long-lead equipment on site?','Critical-path items received / required'],['Jurisdiction','Can the workload legally run here?','Sovereign-eligible MW / total MW']]);
+
+// ---------- GOVERNANCE
+tiles('gTiles',[['Strategic initiatives','12','7 on track · 4 watch · 1 off',''],['Metrics with one signed-off definition','18 / 26','target 26 by Q1','amb'],['Planning dataset checks passed','93%','41 / 44 rules','amb'],['Business cases with post-implementation review','2 / 6 due','','neg']]);
+tbl('ini',['Initiative','Owner','Milestone','Due','Status'],[['Saudi Arabia market entry','Country Head','Design freeze, phase 1','Q4 2026',pill('G')],['Europe campus JV','Corp. Development','Definitive agreements','Q1 2027',pill('A')],['AI-density product and pricing','Commercial','Price book v2','Nov 2026',pill('G')],['Standard business-case framework','Strategy & Planning','Template and assumptions book live','Oct 2026',pill('A')],['Integrated planning dataset','Strategy & Planning','Single source for MW, revenue, capex','Dec 2026',pill('A')],['Power strategy and sourcing','Operations','Long-term supply options paper','Q1 2027',pill('G')],['Design standardisation (modular)','Technology','Reference design v3','Q4 2026',pill('G')],['Post-implementation review cycle','Strategy & Planning','First four reviews complete','Q1 2027',pill('R')]]);
+tbl('dict',['Metric','Definition','Owner','Signed off'],[['Live MW','IT capacity energised and available to sell at period end','Operations',pill('G','Yes')],['Contracted MW','IT capacity under signed agreement, whether or not billing','Commercial',pill('G','Yes')],['Billing MW','Contracted MW for which recurring charges have started','Finance',pill('G','Yes')],['Utilisation','Billing MW ÷ live MW','Strategy',pill('A','Draft')],['Pre-leased share','Contracted MW on pipeline sites ÷ pipeline MW','Commercial',pill('A','Draft')],['Capex per MW','Total project cost ÷ IT MW, excluding land and capitalised interest','Finance',pill('A','Draft')],['Ready for service','Date a hall passes integrated testing and is handed to the customer','Delivery',pill('G','Yes')]]);
+tbl('dq',['Rule','Result','Owner'],[['Every pipeline site has MW, target date, power status and capex','96% — 2 sites missing power status','Delivery'],['Contracted MW in commercial system = contract register','Pass','Commercial'],['Revenue forecast in planning model = Finance forecast (±0.5%)','Fail — 1.3% gap, timing on Site A','Finance / Strategy'],['Every business case uses the current assumptions book version','5 of 9','Strategy'],['Headline figures match the canonical manifest on rebuild','Pass','Strategy']]);
+
+runS();runC();cmp();
+</script>
+</body></html>
